@@ -33,12 +33,9 @@ func main() {
 
 func handleReading(conn net.Conn) {
 	defer conn.Close()
-
 	fmt.Println("handleReading: " + conn.RemoteAddr().String())
-
 	for {
 		b := make([]byte, 1024)
-
 		n, err := conn.Read(b)
 		if err != nil {
 			fmt.Println("Read() failed: " + err.Error())
@@ -46,11 +43,11 @@ func handleReading(conn net.Conn) {
 		}
 
 		if n > 0 {
-			fmt.Printf("Read(): %v", string(b))
-
+			fmt.Printf("Read(): %s %v", string(b), n)
 			var bldr strings.Builder
 			bldr.Write([]byte("Resent: "))
-			bldr.Write([]byte(bldr.String()))
+			bldr.Write(b)
+			conn.Write([]byte(bldr.String()))
 		}
 	}
 
